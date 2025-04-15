@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .weather-info {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Weather App</h1>
+        <form method="POST" class="mb-4">
+            <label for="city">Enter City Name:</label>
+            <input type="text" id="city" name="city" class="form-control" required>
+            <button type="submit" class="btn btn-primary btn-block mt-2">Get Weather</button>
+        </form>
+
+        {% if weather_data %}
+        <div class="weather-info">
+            <h2>Weather in {{ weather_data.city }}</h2>
+            <p>Temperature: {{ weather_data.temperature }}°C</p>
+            <p>Condition: {{ weather_data.description }}</p>
+            <p>Humidity: {{ weather_data.humidity }}%</p>
+            <p>Pressure: {{ weather_data.pressure }} hPa</p>
+        </div>
+        {% endif %}
+
+        {% if error_message %}
+        <p class="error">{{ error_message }}</p>
+        {% endif %}
+        
+        <button id="getLocation" class="btn btn-secondary btn-block mt-3">Use Current Location</button>
+    </div>
+
+    <!-- Add Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        // Add Geolocation Functionality
+        document.getElementById("getLocation").addEventListener("click", function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // Send location data to the backend
+                    window.location.href = `/location/${lat}/${lon}`;
+                }, function() {
+                    alert("Geolocation failed. Please try again.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
+    </script>
+</body>
+</html>
+<!-- <script>
+ -->
